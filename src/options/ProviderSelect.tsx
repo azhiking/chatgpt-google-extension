@@ -17,9 +17,7 @@ async function loadModels(): Promise<string[]> {
 const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
   const [tab, setTab] = useState<ProviderType>(config.provider)
   const { bindings: apiKeyBindings } = useInput(config.configs[ProviderType.GPT3]?.apiKey ?? '')
-  const { bindings: proxyHostBindings } = useInput(
-    config.configs[ProviderType.PROXY]?.proxyHost ?? '',
-  )
+
   const [model, setModel] = useState(config.configs[ProviderType.GPT3]?.model ?? models[0])
   const { setToast } = useToasts()
 
