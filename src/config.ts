@@ -74,6 +74,7 @@ export interface ProviderConfigs {
   provider: ProviderType
   configs: {
     [ProviderType.GPT3]: GPT3ProviderConfig | undefined
+    [ProviderType.PROXY]: ProxyProviderConfig | undefined
   }
 }
 
@@ -85,6 +86,7 @@ export async function getProviderConfigs(): Promise<ProviderConfigs> {
     provider,
     configs: {
       [ProviderType.GPT3]: result[configKey],
+      [ProviderType.PROXY]: result[configKey],
     },
   }
 }
@@ -96,5 +98,6 @@ export async function saveProviderConfigs(
   return Browser.storage.local.set({
     provider,
     [`provider:${ProviderType.GPT3}`]: configs[ProviderType.GPT3],
+    [`provider:${ProviderType.PROXY}`]: configs[ProviderType.PROXY],
   })
 }
