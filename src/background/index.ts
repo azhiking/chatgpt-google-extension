@@ -2,6 +2,7 @@ import Browser from 'webextension-polyfill'
 import { getProviderConfigs, ProviderType } from '../config'
 import { ChatGPTProvider, getChatGPTAccessToken, sendMessageFeedback } from './providers/chatgpt'
 import { OpenAIProvider } from './providers/openai'
+import { ProxyProvider } from './providers/proxy'
 import { Provider } from './types'
 
 async function generateAnswers(port: Browser.Runtime.Port, question: string) {
@@ -14,6 +15,9 @@ async function generateAnswers(port: Browser.Runtime.Port, question: string) {
   } else if (providerConfigs.provider === ProviderType.GPT3) {
     const { apiKey, model } = providerConfigs.configs[ProviderType.GPT3]!
     provider = new OpenAIProvider(apiKey, model)
+  } else if (providerConfigs.provider === ProviderType.PROXY) {
+    const { proxyHost } = providerConfigs.configs[ProviderType.PROXY]!
+    provider = new ProxyProvider(proxyHost)
   } else {
     throw new Error(`Unknown provider ${providerConfigs.provider}`)
   }

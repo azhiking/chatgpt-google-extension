@@ -17,7 +17,9 @@ async function loadModels(): Promise<string[]> {
 const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
   const [tab, setTab] = useState<ProviderType>(config.provider)
   const { bindings: apiKeyBindings } = useInput(config.configs[ProviderType.GPT3]?.apiKey ?? '')
-
+  const { bindings: proxyHostBindings } = useInput(
+    config.configs[ProviderType.PROXY]?.proxyHost ?? '',
+  )
   const [model, setModel] = useState(config.configs[ProviderType.GPT3]?.model ?? models[0])
   const { setToast } = useToasts()
 
@@ -32,10 +34,19 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
         return
       }
     }
+    if (tab === ProviderType.PROXY) {
+      if (!proxyHostBindings.value) {
+        alert('Please enter proxy host')
+        return
+      }
+    }
     await saveProviderConfigs(tab, {
       [ProviderType.GPT3]: {
         model,
         apiKey: apiKeyBindings.value,
+      },
+      [ProviderType.PROXY]: {
+        proxyHost: proxyHostBindings.value,
       },
     })
     setToast({ text: 'Changes saved', type: 'success' })
@@ -84,19 +95,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
           <div className="flex flex-col gap-2">
             <span>Third-party proxy</span>
             <div className="flex flex-row gap-2">
-              <Select
-                scale={2 / 3}
-                value={model}
-                onChange={(v) => setModel(v as string)}
-                placeholder="model"
-              >
-                {models.map((m) => (
-                  <Select.Option key={m} value={m}>
-                    {m}
-                  </Select.Option>
-                ))}
-              </Select>
-              <Input htmlType="text" label="Proxy host" scale={2 / 3} {...apiKeyBindings} />
+              <Input htmlType="text" label="Proxy host" scale={2 / 3} {...proxyHostBindings} />
             </div>
           </div>
         </Tabs.Item>
