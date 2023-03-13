@@ -58,11 +58,16 @@ export async function updateUserConfig(updates: Partial<UserConfig>) {
 export enum ProviderType {
   ChatGPT = 'chatgpt',
   GPT3 = 'gpt3',
+  PROXY = 'proxy',
 }
 
 interface GPT3ProviderConfig {
   model: string
   apiKey: string
+}
+
+interface ProxyProviderConfig {
+  proxyHost: string
 }
 
 export interface ProviderConfigs {
